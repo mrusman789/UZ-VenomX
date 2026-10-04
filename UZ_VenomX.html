@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>UZ VenomX | UZ Creations</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+margin:0;
+min-height:100vh;
+padding:18px;
+background:radial-gradient(circle at top,#17212b,#080b10 60%,#05070a);
+color:white;
+font-family:Arial,sans-serif;
+text-align:center;
+user-select:none
+}
+
+h1{
+margin:5px 0;
+font-size:36px;
+letter-spacing:3px;
+color:#42ff6b;
+text-shadow:0 0 18px rgba(66,255,107,.25)
+}
+
+.subtitle{
+color:#42ff6b;
+font-size:14px;
+letter-spacing:2px;
+font-weight:bold;
+text-transform:uppercase
+}
+
+.creator{
+display:inline-block;
+margin-top:7px;
+padding:5px 13px;
+border:1px solid #26352d;
+border-radius:20px;
+background:rgba(66,255,107,.05);
+color:#777;
+font-size:12px;
+letter-spacing:1.5px
+}
+
+.creator span{
+color:#42ff6b;
+font-weight:bold
+}
+
+.stats{
+display:flex;
+justify-content:center;
+gap:45px;
+margin:13px 0 5px;
+font-size:17px;
+font-weight:bold
+}
+
+.stat-value{color:#42ff6b}
+
+#message{
+min-height:42px;
+margin:7px;
+font-weight:bold;
+line-height:21px
+}
+
+#message small{color:#777;font-weight:normal}
+#message b{color:#42ff6b}
+
+.game-wrapper{
+display:flex;
+justify-content:center
+}
+
+canvas{
+display:block;
+width:500px;
+height:500px;
+max-width:90vw;
+max-height:62vh;
+background:#0d1319;
+border:2px solid #33413a;
+border-radius:16px;
+box-shadow:0 0 35px rgba(0,0,0,.75)
+}
+
+.main-buttons{margin-top:14px}
+
+button{
+border:1px solid #3b454d;
+border-radius:10px;
+padding:11px 18px;
+margin:4px;
+background:#20272e;
+color:white;
+font-size:15px;
+font-weight:bold;
+cursor:pointer
+}
+
+button:hover{
+background:#2d363e
+}
+
+#startButton{
+min-width:175px;
+background:#18783a;
+border-color:#2a9c52
+}
+
+#pauseButton{
+min-width:125px;
+background:#6d591b;
+border-color:#9a7e25
+}
+
+.speed-title{
+margin:13px 0 5px;
+color:#aaa;
+font-size:14px
+}
+
+.speed button{min-width:95px}
+
+.controls{margin-top:10px}
+
+.arrow{
+width:62px;
+height:48px;
+padding:0;
+font-size:21px
+}
+
+.instructions{
+margin-top:13px;
+color:#777;
+font-size:13px;
+line-height:22px
+}
+
+.key{
+display:inline-block;
+padding:2px 6px;
+border:1px solid #39434b;
+border-radius:5px;
+background:#171d23;
+color:#bbb;
+font-size:11px;
+font-weight:bold
+}
+
+.footer{
+margin-top:15px;
+color:#555;
+font-size:11px;
+letter-spacing:1px
+}
+
+@media(max-width:600px){
+body{padding:10px}
+h1{font-size:28px}
+.stats{gap:25px;font-size:15px}
+canvas{
+width:92vw;
+height:92vw;
+max-height:none
+}
+.instructions{font-size:12px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+<h1>UZ VenomX</h1>
+
+<div class="subtitle">
+THE SNAKE HAS EVOLVED
+</div>
+
+<div class="creator">
+Crafted by <span>UZ • CREATIONS</span>
+</div>
+
+</div>
+
+<div class="stats">
+
+<div>
+SCORE:
+<span id="score" class="stat-value">0</span>
+</div>
+
+<div>
+BEST:
+<span id="highScore" class="stat-value">0</span>
+</div>
+
+</div>
+
+<div id="message">
+Press ENTER or START GAME
+<br>
+<small>
+Developed by <b>Usman Zia</b>
+</small>
+</div>
+
+<div class="game-wrapper">
+
+<canvas id="game" width="500" height="500"></canvas>
+
+</div>
+
+<div class="main-buttons">
+
+<button id="startButton">
+START GAME
+</button>
+
+<button id="pauseButton">
+PAUSE
+</button>
+
+</div>
+
+<div class="speed-title">
+GAME SPEED
+</div>
+
+<div class="speed">
+
+<button data-speed="180">
+🐢 SLOW
+</button>
+
+<button data-speed="120">
+🚶 NORMAL
+</button>
+
+<button data-speed="70">
+⚡ FAST
+</button>
+
+</div>
+
+<div class="controls">
+
+<div>
+<button class="arrow" data-direction="up">
+⬆️
+</button>
+</div>
+
+<div>
+
+<button class="arrow" data-direction="left">
+⬅️
+</button>
+
+<button class="arrow" data-direction="down">
+⬇️
+</button>
+
+<button class="arrow" data-direction="right">
+➡️
+</button>
+
+</div>
+
+</div>
+
+<div class="instructions">
+
+💻
+<span class="key">↑</span>
+<span class="key">↓</span>
+<span class="key">←</span>
+<span class="key">→</span>
+
+or
+
+<span class="key">W</span>
+<span class="key">A</span>
+<span class="key">S</span>
+<span class="key">D</span>
+
+= MOVE
+
+<br>
+
+<span class="key">SPACE</span>
+= PAUSE
+
+&nbsp; | &nbsp;
+
+<span class="key">ENTER</span>
+= START / RESTART
+
+</div>
+
+<div class="footer">
+NEON SERPENT • UZ CREATIONS
+</div>
+
+<script>
+
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
+
+const GRID=25;
+const SIZE=500;
+
+let snake=[];
+let food={x:0,y:0};
+
+let dx=GRID;
+let dy=0;
+
+let nextDx=GRID;
+let nextDy=0;
+
+let score=0;
+let speed=120;
+
+let gameRunning=false;
+let gamePaused=false;
+let gameTimer=null;
+
+let highScore=0;
+
+try{
+highScore=Number(
+localStorage.getItem("UZ VenomX HighScore")
+)||0;
+}catch(e){
+highScore=0;
+}
+
+document.getElementById("highScore").textContent=highScore;
+
+
+function setMessage(main,sub){
+
+document.getElementById("message").innerHTML=
+main+"<br><small>"+sub+"</small>";
+
+}
+
+
+function resetGame(){
+
+snake=[
+{x:250,y:250},
+{x:225,y:250},
+{x:200,y:250}
+];
+
+dx=GRID;
+dy=0;
+
+nextDx=GRID;
+nextDy=0;
+
+score=0;
+
+document.getElementById("score").textContent="0";
+
+setMessage(
+"Good luck! 🐍",
+'Developed by <b>Usman Zia</b>'
+);
+
+createFood();
+drawGame();
+
+}
+
+
+function startGame(){
+
+clearInterval(gameTimer);
+
+resetGame();
+
+gameRunning=true;
+gamePaused=false;
+
+document.getElementById("startButton").textContent="RESTART";
+document.getElementById("pauseButton").textContent="PAUSE";
+
+gameTimer=setInterval(gameLoop,speed);
+
+}
+
+
+function togglePause(){
+
+if(!gameRunning)return;
+
+gamePaused=!gamePaused;
+
+if(gamePaused){
+
+setMessage(
+"GAME PAUSED ⏸️",
+'Developed by <b>Usman Zia</b>'
+);
+
+document.getElementById("pauseButton").textContent="RESUME";
+
+}else{
+
+setMessage(
+"Game On! 🐍",
+'Developed by <b>Usman Zia</b>'
+);
+
+document.getElementById("pauseButton").textContent="PAUSE";
+
+}
+
+}
+
+
+function setSpeed(newSpeed){
+
+speed=newSpeed;
+
+if(gameRunning){
+
+clearInterval(gameTimer);
+
+gameTimer=setInterval(gameLoop,speed);
+
+}
+
+}
+
+
+function changeDirection(direction){
+
+if(!gameRunning||gamePaused)return;
+
+if(direction==="up"&&dy===0){
+
+nextDx=0;
+nextDy=-GRID;
+
+}else if(direction==="down"&&dy===0){
+
+nextDx=0;
+nextDy=GRID;
+
+}else if(direction==="left"&&dx===0){
+
+nextDx=-GRID;
+nextDy=0;
+
+}else if(direction==="right"&&dx===0){
+
+nextDx=GRID;
+nextDy=0;
+
+}
+
+}
+
+
+function moveSnake(){
+
+dx=nextDx;
+dy=nextDy;
+
+const newHead={
+x:snake[0].x+dx,
+y:snake[0].y+dy
+};
+
+snake.unshift(newHead);
+
+}
+
+
+function createFood(){
+
+let valid=false;
+
+while(!valid){
+
+food={
+x:Math.floor(Math.random()*(SIZE/GRID))*GRID,
+y:Math.floor(Math.random()*(SIZE/GRID))*GRID
+};
+
+valid=!snake.some(
+part=>part.x===food.x&&part.y===food.y
+);
+
+}
+
+}
+
+
+function checkFood(){
+
+const head=snake[0];
+
+if(head.x===food.x&&head.y===food.y){
+
+score++;
+
+document.getElementById("score").textContent=score;
+
+if(score>highScore){
+
+highScore=score;
+
+try{
+localStorage.setItem(
+"neonSerpentHighScore",
+highScore
+);
+}catch(e){}
+
+document.getElementById("highScore").textContent=highScore;
+
+}
+
+createFood();
+
+}else{
+
+snake.pop();
+
+}
+
+}
+
+
+function checkCollision(){
+
+const head=snake[0];
+
+if(
+head.x<0||
+head.x>=SIZE||
+head.y<0||
+head.y>=SIZE
+){
+
+gameOver();
+return;
+
+}
+
+for(let i=1;i<snake.length;i++){
+
+if(
+head.x===snake[i].x&&
+head.y===snake[i].y
+){
+
+gameOver();
+return;
+
+}
+
+}
+
+}
+
+
+function gameOver(){
+
+gameRunning=false;
+gamePaused=false;
+
+clearInterval(gameTimer);
+
+setMessage(
+"GAME OVER 💀 • Score: "+score,
+'Developed by <b>Usman Zia</b>'
+);
+
+document.getElementById("startButton").textContent="RESTART";
+document.getElementById("pauseButton").textContent="PAUSE";
+
+}
+function drawGame(){
+
+ctx.fillStyle="#0d1319";
+ctx.fillRect(0,0,SIZE,SIZE);
+
+/* Grid */
+ctx.strokeStyle="#182129";
+ctx.lineWidth=1;
+
+for(let i=0;i<=SIZE;i+=GRID){
+
+ctx.beginPath();
+ctx.moveTo(i,0);
+ctx.lineTo(i,SIZE);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.moveTo(0,i);
+ctx.lineTo(SIZE,i);
+ctx.stroke();
+
+}
+
+
+/* Food */
+
+ctx.shadowColor="#ff3b30";
+ctx.shadowBlur=12;
+
+ctx.fillStyle="#ff3b30";
+
+ctx.beginPath();
+
+ctx.arc(
+food.x+GRID/2,
+food.y+GRID/2,
+7,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+ctx.shadowBlur=0;
+
+
+/* Snake */
+
+snake.forEach((part,index)=>{
+
+if(index===0){
+
+/* Head */
+
+ctx.shadowColor="#42ff6b";
+ctx.shadowBlur=10;
+
+ctx.fillStyle="#42ff6b";
+
+roundRect(
+part.x+2,
+part.y+2,
+GRID-4,
+GRID-4,
+6
+);
+
+ctx.fill();
+
+ctx.shadowBlur=0;
+
+
+/* Eyes */
+
+ctx.fillStyle="#07100a";
+
+let eye1;
+let eye2;
+
+if(dx>0){
+
+eye1={x:part.x+17,y:part.y+7};
+eye2={x:part.x+17,y:part.y+17};
+
+}else if(dx<0){
+
+eye1={x:part.x+7,y:part.y+7};
+eye2={x:part.x+7,y:part.y+17};
+
+}else if(dy<0){
+
+eye1={x:part.x+7,y:part.y+7};
+eye2={x:part.x+17,y:part.y+7};
+
+}else{
+
+eye1={x:part.x+7,y:part.y+17};
+eye2={x:part.x+17,y:part.y+17};
+
+}
+
+drawEye(eye1.x,eye1.y);
+drawEye(eye2.x,eye2.y);
+
+}else{
+
+/* Body */
+
+ctx.fillStyle="#24c95a";
+
+roundRect(
+part.x+3,
+part.y+3,
+GRID-6,
+GRID-6,
+5
+);
+
+ctx.fill();
+
+}
+
+});
+
+}
+
+
+/* Rounded rectangle helper */
+
+function roundRect(x,y,w,h,r){
+
+ctx.beginPath();
+
+ctx.roundRect(x,y,w,h,r);
+
+}
+
+
+/* Snake eye helper */
+
+function drawEye(x,y){
+
+ctx.beginPath();
+
+ctx.arc(
+x,
+y,
+2.5,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+}
+
+
+/* Main game loop */
+
+function gameLoop(){
+
+if(gamePaused)return;
+
+moveSnake();
+
+checkFood();
+
+checkCollision();
+
+drawGame();
+
+}
+
+
+/* Start / Restart button */
+
+document
+.getElementById("startButton")
+.addEventListener("click",startGame);
+
+
+/* Pause button */
+
+document
+.getElementById("pauseButton")
+.addEventListener("click",togglePause);
+
+
+/* Speed buttons */
+
+document
+.querySelectorAll("[data-speed]")
+.forEach(button=>{
+
+button.addEventListener("click",function(){
+
+setSpeed(
+Number(this.dataset.speed)
+);
+
+});
+
+});
+
+
+/* Mobile arrow buttons */
+
+document
+.querySelectorAll("[data-direction]")
+.forEach(button=>{
+
+button.addEventListener("click",function(){
+
+changeDirection(
+this.dataset.direction
+);
+
+});
+
+});
+
+
+/* Keyboard controls */
+
+document.addEventListener("keydown",function(event){
+
+const key=event.key.toLowerCase();
+
+
+/* UP */
+
+if(
+key==="arrowup"||
+key==="w"||
+event.code==="ArrowUp"||
+event.code==="KeyW"
+){
+
+event.preventDefault();
+
+changeDirection("up");
+
+return;
+
+}
+
+
+/* DOWN */
+
+if(
+key==="arrowdown"||
+key==="s"||
+event.code==="ArrowDown"||
+event.code==="KeyS"
+){
+
+event.preventDefault();
+
+changeDirection("down");
+
+return;
+
+}
+
+
+/* LEFT */
+
+if(
+key==="arrowleft"||
+key==="a"||
+event.code==="ArrowLeft"||
+event.code==="KeyA"
+){
+
+event.preventDefault();
+
+changeDirection("left");
+
+return;
+
+}
+
+
+/* RIGHT */
+
+if(
+key==="arrowright"||
+key==="d"||
+event.code==="ArrowRight"||
+event.code==="KeyD"
+){
+
+event.preventDefault();
+
+changeDirection("right");
+
+return;
+
+}
+
+
+/* ENTER = START / RESTART */
+
+if(
+key==="enter"||
+event.code==="Enter"
+){
+
+event.preventDefault();
+
+if(!gameRunning){
+
+startGame();
+
+}
+
+return;
+
+}
+
+
+/* SPACE = PAUSE */
+
+if(
+key===" "||
+event.code==="Space"
+){
+
+event.preventDefault();
+
+togglePause();
+
+return;
+
+}
+
+});
+
+
+/* Initial screen */
+
+resetGame();
+
+</script>
+
+</body>
+</html>
